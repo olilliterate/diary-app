@@ -12,7 +12,7 @@ async function index(req, res) {
 async function getEntryById(req, res) {
     try {
         const id = req.params.id;
-        const entry = await Entry.searchById(id);
+        const entry = await Entry.getEntryById(id);
         res.status(200).json(entry);
     } catch (err) {
         res.status(404).json({ error: err })
@@ -23,6 +23,7 @@ async function getEntryById(req, res) {
 async function createEntry(req, res) {
     try {
         const data = req.body;
+        
         const message = await Entry.create(data);
         res.status(201).json(message);
     } catch (err) {
@@ -33,8 +34,8 @@ async function createEntry(req, res) {
 
 async function updateEntryById(req, res) {
     try{
-        const entryToUpdate = await Entry.searchById(req.params.id);
-        changedEntry = entryToUpdate.update(req.body);
+        const entryToUpdate = await Entry.getEntryById(req.params.id);
+        changedEntry = await entryToUpdate.update(req.body);
         res.status(200).json({changedEntry});
     } catch (err) {
         res.status(404).json({ error: err });
@@ -45,7 +46,7 @@ async function updateEntryById(req, res) {
 async function deleteEntryById(req, res) {
     try{
         const id = req.params.id
-        const entryToDelete = await Entry.searchById(id);
+        const entryToDelete = await Entry.getEntryById(id);
         entryToDelete.delete();
         res.status(200).json({msg: `Deleted entry with id ${id}`});
     } catch (err) {
